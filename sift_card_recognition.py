@@ -58,8 +58,8 @@ if __name__ == "__main__":
     cap = cv2.VideoCapture('basic_test.mp4')
     res, target = cap.read()
     while (res == True):
-        res, target = cap.read()
-        target = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY) 
+        res, target_raw = cap.read()
+        target = cv2.cvtColor(target_raw, cv2.COLOR_BGR2GRAY) 
     
         '''
         cv2.imshow("test", src)
@@ -81,11 +81,11 @@ if __name__ == "__main__":
         # 判断最优和次优匹配比率是否足够低，够低则匹配成功
         good = [m1 for (m1, m2) in matches if m1.distance < 0.7 * m2.distance]
 
-        res_img = target.copy()
+        res_img = target_raw.copy()
 
         # 当有足够的健壮匹配点对（至少4个）时
         MIN_MATCH_COUNT = 4
-        if len(good) > MIN_MATCH_COUNT:
+        if len(good) >= MIN_MATCH_COUNT:
             # 从匹配中提取出对应点对
             # (queryIndex for the small object, trainIndex for the scene )
             src_pts = np.float32([ kpts1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
